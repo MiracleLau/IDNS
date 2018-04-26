@@ -17,6 +17,7 @@ namespace IDNS
     {
         private DnsServer server = new DnsServer(10, 10);
         private bool isRun = false;
+        string autofile = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase.Replace("\\","/")+"auto";
         public Form1()
         {
             InitializeComponent();
@@ -89,12 +90,20 @@ namespace IDNS
         //主窗体加载事件
         private void Form1_Load(object sender, EventArgs e)
         {
-            SendLog("程序准备就绪");
-            SetStatus();
-            if (File.Exists("auto"))
+            SendLog("程序准备就绪"+autofile);
+            if (File.Exists(autofile))
             {
-                StartServer(0);
+                if (IsAutoStartMethod())
+                {
+                    StartServer(1);
+                    this.WindowState = FormWindowState.Minimized;
+                }
+                else
+                {
+                    StartServer(0);
+                }
             }
+            SetStatus();
         }
 
         //托盘图标双击显示主窗体
@@ -260,6 +269,22 @@ namespace IDNS
         {
             this.Dispose();
             this.Close();
+        }
+
+        /// <summary>
+        /// 判断是否是通过开机自启启动的
+        /// </summary>
+        /// <returns>是返回true，否返回false</returns>
+        public static bool IsAutoStartMethod()
+        {
+            if (System.Environment.CurrentDirectory.ToLower().StartsWith("c:"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

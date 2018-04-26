@@ -6,6 +6,7 @@ namespace IDNS
 {
     public partial class setting : Form
     {
+        string autofile = System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase.Replace("\\", "/") + "auto";
         public setting()
         {
             InitializeComponent();
@@ -60,7 +61,7 @@ namespace IDNS
             {
                 autoStart.Checked = true;
             }
-            if (File.Exists("auto"))
+            if (File.Exists(autofile))
             {
                 autoStartServer.Checked = true;
             }
@@ -70,16 +71,16 @@ namespace IDNS
         {
             if (autoStartServer.Checked)
             {
-                if (!File.Exists("auto"))
+                if (!File.Exists(autofile))
                 {
-                    File.Create("auto"); 
+                    File.Create(autofile); 
                 }
             }
             else
             {
-                if (File.Exists("auto"))
+                if (File.Exists(autofile))
                 {
-                    File.Delete("auto");
+                    File.Delete(autofile);
                 }
             }
         }
